@@ -3,7 +3,7 @@
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
 import { UsageStats } from '@/components/usage-stats'
-import { UploadBox } from '@/components/upload-box'
+import UploadBox from '@/components/upload-box'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function DashboardPage() {
