@@ -3,10 +3,17 @@
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
 import { UsageStats } from '@/components/usage-stats'
-import { InvoicesOverview } from '@/components/invoices-overview'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { UploadBox } from '@/components/upload-box'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function DashboardPage() {
+  // Mock profile for demo
+  const mockProfile = {
+    id: 'user-demo-123',
+    uploads_limit: 500,
+    email: 'demo@example.com'
+  }
+
   return (
     <SidebarProvider>
       <div className="flex h-screen w-full">
@@ -17,7 +24,7 @@ export default function DashboardPage() {
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
               <p className="text-muted-foreground mt-1">
-                Welcome back! Here&apos;s an overview of your invoice processing.
+                Upload and process your invoices. Drag & drop PDF or image files to get started.
               </p>
             </div>
 
@@ -64,10 +71,10 @@ export default function DashboardPage() {
               </Card>
             </div>
 
-            {/* Recent Invoices */}
+            {/* Upload Box */}
             <div>
-              <h2 className="text-xl font-semibold mb-4">Recent Invoices</h2>
-              <InvoicesOverview />
+              <h2 className="text-xl font-semibold mb-4">Upload Invoices</h2>
+              <UploadBox {...mockProfile} />
             </div>
           </div>
         </main>

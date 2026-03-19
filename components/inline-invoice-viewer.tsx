@@ -301,7 +301,7 @@ const handleSaveLineItems = (itemsOverride?: LineItem[]) => {
   } = useImagePublicUrl(invoice.file_path)
 
   const {data: fields, isLoading: fieldsLoading, error: fieldsError} = useFieldHeaders(fieldId)
-  const fieldNames = fields?.lineitem_headers.map(h => h.name) ?? []
+  const fieldNames = fields?.lineitem_headers?.map(h => h.name) ?? []
 
   
 
@@ -314,7 +314,7 @@ const handleSaveLineItems = (itemsOverride?: LineItem[]) => {
     if (!fields?.lineitem_headers) return []
   
     // 1) Map your real headers exactly as before
-    const dynamicCols: ColDef[] = fields.lineitem_headers.map(({ name, description }) => ({
+    const dynamicCols: ColDef[] = (fields?.lineitem_headers ?? []).map(({ name, description }) => ({
       headerName: name,
       field: name,
       editable: (p) => !p.data.isAddButton,
