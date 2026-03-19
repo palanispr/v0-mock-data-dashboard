@@ -26,6 +26,24 @@ export function useFieldHeaders(fieldId: string) {
       await new Promise((resolve) => setTimeout(resolve, 200))
       // Return mock field headers
       return {
+        headers: [
+          {
+            name: "invoice_number",
+            description: "Invoice number",
+          },
+          {
+            name: "invoice_date",
+            description: "Date of invoice",
+          },
+          {
+            name: "due_date",
+            description: "Due date for payment",
+          },
+          {
+            name: "total_amount",
+            description: "Total amount of invoice",
+          },
+        ],
         lineitem_headers: [
           {
             name: "description",

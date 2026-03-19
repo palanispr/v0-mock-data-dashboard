@@ -609,13 +609,13 @@ const handleSaveLineItems = (itemsOverride?: LineItem[]) => {
           <Accordion type="multiple" defaultValue={["headers","lineitems"]}>
             <AccordionItem value="headers">
               <AccordionTrigger className="text-lg font-semibold">
-                Headers<Badge variant="outline" className="ml-2">{fields?.headers.length} Headers</Badge>
+                Headers<Badge variant="outline" className="ml-2">{fields?.headers?.length || 0} Headers</Badge>
               </AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-4">
                   {fieldsLoading ? <Loader2 className="animate-spin" /> : fieldsError ? (
                     <div className="text-red-500"><AlertCircle /></div>
-                  ) : fields?.headers.map(h=> (
+                  ) : fields?.headers && fields.headers.length > 0 ? fields.headers.map(h=> (
                     <div key={h?.name} className="grid grid-cols-3 gap-4 items-center">
                       <Label className="text-sm font-medium" title={h.description}>{h.name}</Label>
                       <div className="col-span-2">
@@ -632,7 +632,11 @@ const handleSaveLineItems = (itemsOverride?: LineItem[]) => {
           />
                       </div>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="text-gray-500 text-center py-8 border rounded-lg bg-gray-50">
+                      <p>No headers available</p>
+                    </div>
+                  )}
                   {/* Conditional Save Button */}
           {areHeadersDirty && (
             <div className="flex justify-end pt-4">

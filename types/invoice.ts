@@ -52,5 +52,6 @@ export interface FieldHeader {
 }
 
 export interface FieldData {
-  lineitem_headers: FieldHeader[]
+  headers?: FieldHeader[]
+  lineitem_headers?: FieldHeader[]
 }
