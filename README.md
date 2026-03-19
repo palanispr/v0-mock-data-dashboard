@@ -1,40 +1,52 @@
-# Invoice Dashboard with Mock Data
+# Invoice Dashboard with AG Grid & Inline Viewer
 
-A complete invoice extraction and management dashboard built with **Next.js 16**, **TanStack Query (React Query)**, and **TypeScript**. All data is mocked—no authentication or database required.
+A comprehensive invoice extraction and management dashboard built with **Next.js 16**, **TanStack Query**, **TypeScript**, and **AG Grid Community**. Features advanced data grid visualization and inline invoice viewer with editable line items.
 
 ## Features
 
 ✅ **Dashboard** - Overview of invoice processing with usage stats  
-✅ **Extractions** - Browse and filter invoices by status (AI Results, Hold, Duplicate, Approved)  
-✅ **Usage Tracking** - Monitor document uploads and extraction quotas  
-✅ **Settings** - View profile and account information  
+✅ **Extractions** - AG Grid-powered invoice table with expandable groups and multi-page support  
+✅ **Inline Invoice Viewer** - Full-screen invoice preview with editable headers and line items  
+✅ **AG Grid Community** - Advanced table with sorting, filtering, pinned columns, and cell rendering  
+✅ **Line Items Editor** - Add, edit, and delete invoice line items with real-time validation  
+✅ **Image Viewer** - Zoomable invoice image preview with pan/pinch controls  
 ✅ **TanStack Query** - Efficient data fetching with caching and synchronization  
 ✅ **TypeScript** - Full type safety throughout the application  
-✅ **Mock Data** - Completely functional demo with realistic data  
+✅ **Mock Data** - Completely functional demo with realistic invoice data  
 
 ## Project Structure
 
 ```
 app/
-├── page.tsx              # Dashboard home page
+├── page.tsx                    # Dashboard home page
 ├── extractions/
-│   └── page.tsx          # Extractions management
+│   └── page.tsx                # Extractions with AG Grid table
 ├── usage/
-│   └── page.tsx          # Usage & quota tracking
+│   └── page.tsx                # Usage & quota tracking
 ├── settings/
-│   └── page.tsx          # Account settings
-├── layout.tsx            # Root layout with providers
-└── providers.tsx         # TanStack Query provider setup
+│   └── page.tsx                # Account settings
+├── layout.tsx                  # Root layout with providers
+└── providers.tsx               # TanStack Query provider setup
 
 components/
-├── app-sidebar.tsx       # Navigation sidebar
-├── invoices-overview.tsx # Recent invoices widget
-├── usage-stats.tsx       # Usage stats cards
-└── ui/                   # shadcn/ui components
+├── inline-invoice-viewer.tsx   # Full-screen invoice viewer with line items
+├── invoices-table.tsx          # AG Grid invoice table with expandable rows
+├── app-sidebar.tsx             # Navigation sidebar
+├── invoices-overview.tsx       # Recent invoices widget
+├── usage-stats.tsx             # Usage stats cards
+└── ui/                         # shadcn/ui components
+
+service/
+├── extraction.service.ts       # Invoice data queries (useInvoices)
+├── ZoomableImage.service.ts    # Image & field header queries
+└── insert.service.service.ts   # Invoice update mutation (useUpdateInvoiceStatus)
+
+types/
+└── invoice.ts                  # TypeScript types for invoices
 
 lib/
-├── hooks.ts              # TanStack Query hooks
-└── mock-data.ts          # Mock data generation
+├── hooks.ts                    # Additional TanStack Query hooks
+└── mock-data.ts                # Mock data generation
 ```
 
 ## Quick Start
@@ -59,11 +71,42 @@ lib/
 - Usage statistics (uploads & extractions)
 - Recent invoices at a glance
 
-### Extractions (`/extractions`)
-- Tabbed interface for invoice status filtering
-- Search and filter invoices by name or client
-- Shows invoice details, status counts, and page counts
-- Responsive invoice list with status badges
+### Extractions (`/extractions`) - **AG Grid Powered**
+- **AG Grid Community Table** with advanced features:
+  - Multi-column sorting and filtering
+  - Expandable rows to show multiple pages per invoice
+  - Pinned action column on the right
+  - Auto-resizing columns with flex layout
+  - Status badges inline rendering
+  - Page count indicators
+- **Tabbed Interface** for invoice status filtering:
+  - AI Results (all invoices)
+  - Hold (pending review)
+  - Duplicate (flagged as duplicate)
+  - Approved (completed)
+- **Click to View** - Opens inline invoice viewer for detailed inspection
+- **Pagination** - Navigate through large invoice sets
+
+### Inline Invoice Viewer (Extractions Modal)
+- **Split-screen layout**:
+  - Left: Zoomable invoice image preview
+  - Right: Editable headers and line items table
+- **Image Controls**:
+  - Zoom in/out with buttons
+  - Pan and pinch zoom support
+  - Reset zoom
+- **Header Editor**:
+  - Inline editable invoice metadata
+  - Save headers with one click
+- **Line Items AG Grid**:
+  - Add new line items with validation
+  - Edit existing items in-place
+  - Delete items with undo buffer (5-second window)
+  - Dynamic columns based on field definitions
+- **Status Management**:
+  - Mark as Hold, Duplicate, or Approved
+  - Update status immediately
+  - Navigation between invoices (prev/next)
 
 ### Usage (`/usage`)
 - Detailed usage statistics
@@ -72,7 +115,7 @@ lib/
 
 ### Settings (`/settings`)
 - Profile information display
-- Organization details (for Teams tier)
+- Organization details
 - Subscription plan information
 
 ## Data Flow
@@ -131,14 +174,33 @@ export function useInvoices() {
 ## Technology Stack
 
 - **Next.js 16** - React framework with App Router
-- **TanStack Query v5** - Server state management
+- **TanStack Query v5** - Server state management & data fetching
+- **AG Grid Community v33** - Advanced data grid with sorting, filtering, editing
+- **react-zoom-pan-pinch** - Image zooming and panning
 - **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
+- **Tailwind CSS v4** - Utility-first styling
 - **shadcn/ui** - High-quality React components
 - **Lucide Icons** - Beautiful icon library
 - **date-fns** - Date formatting utilities
+- **Sonner** - Toast notifications
 
 ## Key Features Explained
+
+### AG Grid Invoice Table
+- **ModuleRegistry Setup**: All community modules registered once at component initialization
+- **Dynamic Columns**: File name, Created At, Client, Status, and Actions
+- **Row Expansion**: Multi-page invoices show expandable groups
+- **Status Rendering**: Custom cell renderers show status badges with color coding
+- **Context Menu**: Actions column with eye icon to view invoices
+- **Auto-sizing**: Columns flex to fill available space
+
+### Inline Invoice Viewer
+- **State Management**: Uses React state for headers and line items
+- **Editable Grid**: AG Grid with cell editing for line items
+- **Dynamic Fields**: Columns generated from field definitions
+- **Add/Edit/Delete**: Full CRUD operations on line items
+- **Validation**: Checks all fields are populated before saving
+- **Undo Buffer**: 5-second window to undo deletions
 
 ### Caching & Stale Time
 All queries have a 5-minute stale time, meaning data is considered fresh for 5 minutes before refetching.
@@ -147,13 +209,13 @@ All queries have a 5-minute stale time, meaning data is considered fresh for 5 m
 Components show skeleton loaders while data is being fetched, providing a smooth user experience.
 
 ### Error Handling
-Error states are properly handled with user-friendly messages.
+Error states are properly handled with user-friendly messages and Sonner toasts.
 
 ### Pagination
-The extractions page supports pagination for large datasets.
+The extractions page supports AG Grid pagination for large datasets.
 
 ### Search & Filter
-Real-time search functionality across invoices by file name and client.
+Real-time search functionality across invoices with TanStack Query caching.
 
 ## Customization
 
