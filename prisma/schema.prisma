@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  uploads_limit Int @default(500)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoices InvoiceDocument[]
+}
+
+model InvoiceDocument {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fileName    String
+  clientName  String
+  status      String     @default("ai-results") // ai-results, hold, duplicate, approved
+  pageCount   Int
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  pages       InvoicePage[]
+  headers     InvoiceHeader[]
+  lineItems   InvoiceLineItem[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model InvoicePage {
+  id          String     @id @default(cuid())
+  invoiceId   String
+  invoice     InvoiceDocument @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  pageNumber  Int
+  imageUrl    String
+  createdAt   DateTime   @default(now())
+
+  @@index([invoiceId])
+}
+
+model InvoiceHeader {
+  id          String     @id @default(cuid())
+  invoiceId   String
+  invoice     InvoiceDocument @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  fieldName   String
+  fieldValue  String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([invoiceId])
+}
+
+model InvoiceLineItem {
+  id          String     @id @default(cuid())
+  invoiceId   String
+  invoice     InvoiceDocument @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  data        Json       // Flexible JSON field for line item data
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([invoiceId])
+}
+
+model FieldDefinition {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String
+  type        String     @default("text") // text, number, date, etc.
+  isCustom    Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+}

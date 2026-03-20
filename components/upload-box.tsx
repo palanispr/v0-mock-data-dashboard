@@ -20,17 +20,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { getTotal } from "@/utils/supabase/storage";
-import { fetchUserUsage } from "@/utils/supabase/client";
-import {
-  addCustomField,
-  getInvoiceFields,
-  updateField,
-} from "@/service/invoiceFieldsService";
-
 import { toast } from "sonner";
-import { uploadFile, insertInvoiceDocument } from "@/service/uploadbox.service"
-import { useGlobalState } from "@/context/GlobalState";
+import { useCreateInvoiceDocument, useFieldDefinitions } from "@/lib/hooks";
 
 interface Profile {
   id: string
